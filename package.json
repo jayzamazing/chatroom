@@ -1,0 +1,25 @@
+{
+  "name": "chatroom",
+  "version": "1.0.0",
+  "description": "A chat room application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayzamazing/chatroom.git"
+  },
+  "keywords": [
+    "chatroom",
+    "sockets",
+    "node",
+    "javascript"
+  ],
+  "author": "adrian jay lopez <adrianjaylopez@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jayzamazing/chatroom/issues"
+  },
+  "homepage": "https://github.com/jayzamazing/chatroom#readme"
+}
