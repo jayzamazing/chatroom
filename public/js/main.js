@@ -1,6 +1,8 @@
 $(document).ready(function() {
   //create manager object by calling io function
   var socket = io();
+  //add listener for server messages
+  socket.on('message', addMessage);
   //select input tag
   var input = $('input');
   //get div with messages id
@@ -25,4 +27,5 @@ $(document).ready(function() {
     //empty input
     input.val('');
   });
+
 });
