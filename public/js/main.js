@@ -20,6 +20,8 @@ $(document).ready(function() {
     var message = input.val();
     //call the addmessage function passing the input contents
     addMessage(message);
+    //sends message to socket.io server
+    socket.emit('message', message);
     //empty input
     input.val('');
   });
