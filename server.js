@@ -10,7 +10,9 @@ app.use(express.static('public'));
 var server = http.Server(app);
 //create sockets
 var io = socket_io(server);
+//keep track of amount of users connected
 var usersConnected = 0;
+//keep track of userids to names
 var users = {};
 //attach listener to connection event
 io.on('connection', function(socket) {
@@ -23,15 +25,13 @@ io.on('connection', function(socket) {
   socket.broadcast.emit('message', 'user connected');
   //attach listener that will allow user to be assigned a name
   socket.on('join', function(name) {
+    //add user
     users[socket.id] = name;
     socket.emit("update", "You are connected to the server.");
     socket.broadcast.emit("update", name + " has joined the server.")
     socket.broadcast.emit("update-users", users);
 
   });
-  socket.on('send', function(message){
-        socket.broadcast.emit("message", users[socket.id], msg);
-    });
   //attach listener for message event
   socket.on('message', function(message) {
     //log message to the console
@@ -50,7 +50,5 @@ io.on('connection', function(socket) {
     socket.broadcast.emit('message', 'user disconnected');
   });
 });
-
-
 //start server listening on port
 server.listen(8080);
