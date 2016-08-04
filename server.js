@@ -18,6 +18,8 @@ io.on('connection', function(socket) {
   socket.on('message', function(message) {
     //log message to the console
     console.log('Received message:', message);
+    //send message to all clients except the originator
+    socket.broadcast.emit('message', message);
   });
 });
 
