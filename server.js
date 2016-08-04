@@ -12,7 +12,13 @@ var server = http.Server(app);
 var io = socket_io(server);
 //attach listener to connection event
 io.on('connection', function(socket) {
+  //log message to the console
   console.log('Client connected');
+  //attach listener for message event
+  socket.on('message', function(message) {
+    //log message to the console
+    console.log('Received message:', message);
+  });
 });
 
 //start server listening on port
