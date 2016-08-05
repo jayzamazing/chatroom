@@ -16,15 +16,16 @@ var usersConnected = 0;
 var users = {};
 //attach listener to connection event
 io.on('connection', function(socket) {
-  //increment usersconnected count
-  usersConnected++;
-  console.log('Clients connected: ' + usersConnected);
   //attach listener that will allow user to be assigned a name
   socket.on('join', function(name) {
+    //increment usersconnected count
+    usersConnected++;
+    console.log('Clients connected: ' + usersConnected);
     //add user
     users[socket.id] = name;
     socket.emit('message', 'You are connected to the server.');
     socket.broadcast.emit('message', name + ' has joined the server.')
+    io.emit('users', users);
   });
   //attach listener for message event
   socket.on('message', function(message) {
@@ -40,8 +41,8 @@ io.on('connection', function(socket) {
     if (users[socket.id] !== undefined) {
       socket.broadcast.emit('message', users[socket.id] + ' has disconnected.');
       delete users[socket.id];
-      socket.broadcast.emit('message', users);
     }
+    io.emit('users', users);
   });
 });
 //start server listening on port
