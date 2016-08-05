@@ -1,8 +1,6 @@
 $(document).ready(function() {
   //create manager object by calling io function
   var socket = io();
-  //add listener for server messages
-  socket.on('message', addMessage);
   //select input tag
   var input = $('input');
   //get div with messages id
@@ -11,15 +9,29 @@ $(document).ready(function() {
   var addMessage = function(message) {
     messages.append('<div>' + message + '</div>');
   };
+  $('#namefield').on('keydown', function(event){
+    //if the key is not return
+    if (event.keyCode != 13) {
+      //exit out
+      return;
+    }
+    var name = $('#namefield').val();
+    if (name != '') {
+      socket.emit('join', name);
+      $('#namefield').prop('disabled', true);
+      $('#msgfield').prop('disabled', false);
+      $('#msgfield').focus();
+    }
+  });
   //function to listen to keydown when enter is pressed
-  input.on('keydown', function(event){
+  $('#msgfield').on('keydown', function(event){
     //if the key is not return
     if (event.keyCode != 13) {
       //exit out
       return;
     }
     //get the inputs contents
-    var message = input.val();
+    var message = $('#msgfield').val();
     //call the addmessage function passing the input contents
     addMessage(message);
     //sends message to socket.io server
@@ -27,5 +39,6 @@ $(document).ready(function() {
     //empty input
     input.val('');
   });
-
+  //add listener for server messages
+  socket.on('message', addMessage);
 });

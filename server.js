@@ -16,38 +16,32 @@ var usersConnected = 0;
 var users = {};
 //attach listener to connection event
 io.on('connection', function(socket) {
-  //log message to the console
-  console.log('Client connected');
   //increment usersconnected count
   usersConnected++;
-  console.log('Users connected: ' + usersConnected);
-  //pass message to browser when a user connects
-  socket.broadcast.emit('message', 'user connected');
+  console.log('Clients connected: ' + usersConnected);
   //attach listener that will allow user to be assigned a name
   socket.on('join', function(name) {
     //add user
     users[socket.id] = name;
-    socket.emit("update", "You are connected to the server.");
-    socket.broadcast.emit("update", name + " has joined the server.")
-    socket.broadcast.emit("update-users", users);
-
+    socket.emit('message', 'You are connected to the server.');
+    socket.broadcast.emit('message', name + ' has joined the server.')
   });
   //attach listener for message event
   socket.on('message', function(message) {
     //log message to the console
-    console.log('Received message:', message + 'from user: ' + user[socket.id]);
+    console.log('Received message: ' + message + ' from user: ' + users[socket.id]);
     //send message to all clients except starting socket
-    socket.broadcast.emit("message", users[socket.id], msg);
+    socket.broadcast.emit('message', users[socket.id] + ': ' + message);
   });
   //send message to users when a user disconnects
   socket.on('disconnect', function() {
     usersConnected--;
-    console.log('Users connected: ' + usersConnected);
-    socket.broadcast.emit("update", users[socket.id] + " has disconnected.");
-    delete users[socket.id];
-    socket.broadcast.emit("update-users", users);
-    //send message when a user disconnects
-    socket.broadcast.emit('message', 'user disconnected');
+    console.log('Clients connected: ' + usersConnected);
+    if (users[socket.id] !== undefined) {
+      socket.broadcast.emit('message', users[socket.id] + ' has disconnected.');
+      delete users[socket.id];
+      socket.broadcast.emit('message', users);
+    }
   });
 });
 //start server listening on port
