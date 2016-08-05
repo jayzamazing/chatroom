@@ -1,5 +1,6 @@
 $(document).ready(function() {
-  this.users;
+  var usersConnected;
+  var userSelected;
   //create manager object by calling io function
   var socket = io();
   //select input tag
@@ -12,18 +13,18 @@ $(document).ready(function() {
     messages.append('<div>' + message + '</div>');
   };
   var updateUsers = function(users) {
-    this.users = users;
+    usersConnected = users;
     usr.empty();
-    usr.append('<div>broadcast</div>');
+    usr.append('<div  style="background-color: yellow;">broadcast</div>');
     $.each(users, function(id, name) {
       if ('/#'.concat(socket.id) !== id) {
-      usr.append('<div>' + name + '</div>');
+      usr.append('<div data-userid="' + id + '">' + name + '</div>');
     };
   });
   };
+  //deals with highlighting user that messages are going to
   $('.users').on('click', function(event) {
-    // $(event.target).css('background-color', 'yellow');
-    var temp = $(event.target);
+    userSelected = $(event.target).data('userid');
     $.each($('.users > div'), function(index, section) {
       $(section).removeAttr('style');
     });
@@ -54,8 +55,13 @@ $(document).ready(function() {
     var message = $('#msgfield').val();
     //call the addmessage function passing the input contents
     addMessage(message);
+    var completeMsg = {
+      message: message,
+      user: userSelected
+    }
     //sends message to socket.io server
-    socket.emit('message', message);
+    socket.emit('message', completeMsg);
+
     //empty input
     $('#msgfield').val('');
   });

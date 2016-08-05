@@ -31,18 +31,24 @@ io.on('connection', function(socket) {
   socket.on('message', function(message) {
     //log message to the console
     console.log('Received message: ' + message + ' from user: ' + users[socket.id]);
-    //send message to all clients except starting socket
-    socket.broadcast.emit('message', users[socket.id] + ': ' + message);
+    if (message.user === undefined) {
+      //send message to all clients except starting socket
+      socket.broadcast.emit('message', users[socket.id] + ': ' + message.message);
+    } else {
+      socket.to(message.user).emit('message', users[message.user] + ': ' + message.message);
+    }
   });
   //send message to users when a user disconnects
   socket.on('disconnect', function() {
-    usersConnected--;
-    console.log('Clients connected: ' + usersConnected);
-    if (users[socket.id] !== undefined) {
-      socket.broadcast.emit('message', users[socket.id] + ' has disconnected.');
-      delete users[socket.id];
+    if (usersConnected > 0) {
+      usersConnected--;
+      console.log('Clients connected: ' + usersConnected);
+      if (users[socket.id] !== undefined) {
+        socket.broadcast.emit('message', users[socket.id] + ' has disconnected.');
+        delete users[socket.id];
+      }
+      io.emit('users', users);
     }
-    io.emit('users', users);
   });
 });
 //start server listening on port
