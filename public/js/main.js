@@ -10,6 +10,7 @@ $(document).ready(function() {
     //get div with messages id
     var messages = $('#messages');
     var usr = $('.users');
+    var timeout;
     //add message contents to the screen
     var addMessage = function(message) {
         //add message after all the rest
@@ -46,6 +47,11 @@ $(document).ready(function() {
                     //add users typing to list
                     $('.typing').append(item + ' is typing.');
                 });
+                //slight timeout if no users are typing
+                timeout = setTimeout(function() {
+                    //empty list
+                    $('.typing').empty();
+                }, 5000);
                 //otherwise
             } else {
                 //empty list
@@ -91,8 +97,6 @@ $(document).ready(function() {
         if (event.keyCode != 13) {
             ////emit that someone is typing
             socket.emit('typing', true);
-            //exit out
-            return;
             //otherwise
         } else {
             //person pressed enter and message is complete, user is not currently typing
