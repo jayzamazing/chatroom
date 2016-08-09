@@ -42,7 +42,7 @@ io.on('connection', function(socket) {
             //otherwise
         } else {
             //send message to specific user
-            socket.to(message.user).emit('message', users[message.user] + ': ' + message.message);
+            io.to(message.user).emit('message', users[socket.id] + ': ' + message.message);
         }
     });
     //send message to users when a user disconnects

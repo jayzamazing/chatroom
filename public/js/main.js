@@ -24,7 +24,7 @@ $(document).ready(function() {
         usr.append('<div class="highlight">broadcast</div>');
         //iterate through list of users
         $.each(users, function(id, name) {
-            //take off /# in front of id, compare if both id's are the same
+            //add /# in front of id, compare if both id's are the same
             if ('/#'.concat(socket.id) !== id) {
                 //add user to user list
                 usr.append('<div data-userid="' + id + '">' + name + '</div>');
